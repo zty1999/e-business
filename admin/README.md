@@ -20,3 +20,6 @@ git push -u origin master(首次提交加-u 之后再push直接git push)
 新建分支-login 组件配置路由
 git checkout -b dev-login //创建并切换到login分支
 git branch //查看分支状态
+
+
+

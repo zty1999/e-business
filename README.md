@@ -88,6 +88,20 @@ this.$router.push('/login')
 
 
 
+
+# 页面内容
+## 通过接口获取菜单数据
+
+>通过axios请求拦截器添加token,保证拥有获取数据的权限。
+// axios请求拦截
+axios.interceptors.request.use (config => (
+//为请求头对象，添加Token验证的Authorization字段
+config.headers.Authorization = window.sessionStorage.getItem('token')
+return config
+
+
+
+
 tag
 =====
 >.prettierrc文件更改vscode格式化规则，对照eslint模式规则。

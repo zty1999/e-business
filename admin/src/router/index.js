@@ -16,7 +16,29 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import ('@/views/Home')
+    component: () => import ('@/views/Home'),
+    redirect: '/welcome',
+    children: [
+      //欢迎页
+      {path: '/welcome',name: 'Welcome', component: () => import ('@/views/Welcome')},
+      //用户列表
+      {path: '/users',name: 'Users', component: () => import ('@/views/Users')},
+      //角色列表
+      {path: '/roles',name: 'Roles', component: () => import ('@/views/Roles')},
+      //权限列表
+      {path: '/rights',name: 'Rights', component: () => import ('@/views/Rights')},
+      //商品列表
+      {path: '/goods',name: 'Goods', component: () => import ('@/views/Goods')},
+      // 分类参数
+      {path: '/params',name: 'Params', component: () => import ('@/views/Params')},
+      // 商品分类
+      {path: '/categories',name: 'Categories', component: () => import ('@/views/Categories')},
+      // 订单列表
+      {path: '/orders',name: 'Orders', component: () => import ('@/views/Orders')},
+      // 数据报表
+      {path: '/reports',name: 'Reports', component: () => import ('@/views/Reports')},
+    
+    ]
   }
 ]
 
