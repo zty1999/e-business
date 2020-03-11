@@ -5,5 +5,7 @@
 </template>
 
 <style>
-
+.el-main {
+  background-color: #eaedf1;
+}
 </style>
