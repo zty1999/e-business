@@ -107,8 +107,9 @@ tag
 >.prettierrc文件更改vscode格式化规则，对照eslint模式规则。
 
 
-
-
+安装 vue-table-with-tree-grid————树形表格组件
+=====
+>https://github.com/MisterTaki/vue-table-with-tree-grid
 
 初始化一个node项目
 npm init -y 会生成一个package.json文件

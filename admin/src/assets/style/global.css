@@ -14,7 +14,7 @@ body,
 
 .el-breadcrumb {
   margin-bottom: 15px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .el-card {
@@ -23,9 +23,16 @@ body,
 
 .el-table {
   margin-top: 15px;
-  font-size: 12px;
+  /* font-size: 12px; */
 }
 
 .el-pagination {
   margin-top: 15px;
+}
+
+
+.el-table thead {
+  color: #1f2d3d;
+  font-weight: 500;
+  font-size: 14px;
 }
