@@ -22,17 +22,19 @@ const routes = [
       //欢迎页
       {path: '/welcome',name: 'Welcome', component: () => import ('@/views/Welcome')},
       //用户列表
-      {path: '/users',name: 'Users', component: () => import ('@/views/Users')},
+      {path: '/users',name: 'Users', component: () => import ('@/views/user/Users')},
       //角色列表
-      {path: '/roles',name: 'Roles', component: () => import ('@/views/Roles')},
+      {path: '/roles',name: 'Roles', component: () => import ('@/views/power/Roles')},
       //权限列表
-      {path: '/rights',name: 'Rights', component: () => import ('@/views/Rights')},
+      {path: '/rights',name: 'Rights', component: () => import ('@/views/power/Rights')},
       //商品列表
-      {path: '/goods',name: 'Goods', component: () => import ('@/views/Goods')},
+      {path: '/goods',name: 'GoodsList',component: () => import ('@/views/goods/List')},
+      //添加商品
+      {path: '/goods/add',name: 'Add', component: () => import ('@/views/goods/Add')},
       // 分类参数
-      {path: '/params',name: 'Params', component: () => import ('@/views/Params')},
+      {path: '/params',name: 'Params', component: () => import ('@/views/goods/Params')},
       // 商品分类
-      {path: '/categories',name: 'Categories', component: () => import ('@/views/Categories')},
+      {path: '/categories',name: 'Categories', component: () => import ('@/views/goods/Categories')},
       // 订单列表
       {path: '/orders',name: 'Orders', component: () => import ('@/views/Orders')},
       // 数据报表

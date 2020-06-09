@@ -23,7 +23,7 @@ body,
 
 .el-table {
   margin-top: 15px;
-  /* font-size: 12px; */
+  font-size: 12px;
 }
 
 .el-pagination {
@@ -31,8 +31,20 @@ body,
 }
 
 
+.el-steps {
+  margin: 15px 0;
+}
+
+.el-step__title {
+  font-size: 13px;
+}
+
+.ql-editor {
+  min-height: 300px;
+}
+
 .el-table thead {
-  color: #1f2d3d;
+  color: #838d99;
   font-weight: 500;
   font-size: 14px;
 }
