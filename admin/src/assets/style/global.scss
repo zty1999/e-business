@@ -1,0 +1,59 @@
+/*全局样式表*/
+
+*,*::after,*::before {
+    box-sizing: border-box;
+}
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-width: 1366px;
+}
+
+
+
+.el-breadcrumb {
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.box-card {
+  margin-top: 1em;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15) !important;
+  .el-input-group {
+    width: 40%;
+    margin-right: 2em;
+  }
+  .el-table {
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+}
+// .el-card {
+//   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
+// }
+
+.ql-editor {
+  min-height: 300px;
+}
+
+.el-table {
+  margin-top: 15px;
+  /* font-size: 12px; */
+}
+
+.el-pagination {
+  margin-top: 15px;
+}
+
+
+.el-table thead {
+  color: #1f2d3d;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+

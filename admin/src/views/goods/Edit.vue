@@ -9,7 +9,7 @@
     </el-breadcrumb>
     <el-card class="box-card">
       <!-- 页面提示信息 -->
-      <el-alert title="添加商品信息" center type="info" show-icon> </el-alert>
+      <el-alert title="修改商品信息" center type="info" show-icon> </el-alert>
       <!-- 步骤条 active只接收数字，与tab栏的数据联动使传过来的数据为字符串， -0转为数字-->
       <el-steps :active="activeIndex - 0" align-center>
         <el-step title="基本信息"></el-step>
@@ -21,9 +21,9 @@
       </el-steps>
       <!-- tab栏区域 表单-->
       <el-form
-        :model="addForm"
-        :rules="addRules"
-        ref="addFormRef"
+        :model="good"
+        :rules="editRules"
+        ref="goodRef"
         label-width="70px"
         label-position="top"
       >
@@ -35,40 +35,41 @@
         >
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
-              <el-input v-model="addForm.goods_name"></el-input>
+              <el-input v-model="good.goods_name"></el-input>
             </el-form-item>
             <el-form-item label="商品价格" prop="goods_price">
               <el-input
                 type="number"
-                v-model="addForm.goods_price"
+                v-model="good.goods_price"
                 onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
               ></el-input>
             </el-form-item>
             <el-form-item label="商品重量" prop="goods_weight">
               <el-input
                 type="number"
-                v-model="addForm.goods_weight"
+                v-model="good.goods_weight"
                 onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
               ></el-input>
             </el-form-item>
             <el-form-item label="商品数量" prop="goods_number">
               <el-input
                 type="number"
-                v-model="addForm.goods_number"
+                v-model="good.goods_number"
                 onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
               ></el-input>
             </el-form-item>
             <el-form-item label="商品分类" prop="goods_cat">
-              <el-cascader
+              </el-form-item>
+            <!-- 选择商品分类的级联选择框 -->
+            <el-cascader
                 :props="cateProps"
                 expand-trigger="hover"
-                v-model="addForm.goods_cat"
+                v-model="good.goods_cat"
                 :options="cateList"
                 @change="handleChanged()"
                 clearable
               ></el-cascader
-            ></el-form-item>
-            <!-- 选择商品分类的级联选择框 -->
+            >
           </el-tab-pane>
           <el-tab-pane label="商品参数" name="1">
             <!-- 渲染表单的Item项 -->
@@ -98,8 +99,12 @@
               <el-input v-model="item.attr_vals"></el-input>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品图片" name="3">
+          <el-tab-pane label="商品图片" name="3" style="display: flex">
             <!-- action 表示图片要上传到的后台API地址 drag 拖拽上传 accept限制上传文件类型 *表示支持所有的格式-->
+            <div style="display: flex; ">
+            <div class="" v-for="(item,index) in good.pics" :key="index" v-if="item.pics_big_url" style="padding-right: 5px; ">
+            <el-image style="width: 148px; height: 148px; border: 1px solid #c0ccda;border-radius: 6px;"  :src="item.pics_big_url" >
+              </el-image></div></div>
             <el-upload
               :action="uploadUrl"
               :headers="getAuthHeaders()"
@@ -124,12 +129,12 @@
           <el-tab-pane label="商品内容" name="4">
             <quill-editor
     ref="myQuillEditor"
-    v-model="addForm.goods_introduce"
+    v-model="good.goods_introduce"
     
   />
-            <!-- 添加商品的按钮 -->
+            <!-- 保存商品修改的按钮 -->
             <div style="text-align:right">
-              <el-button type="primary" class="btnAdd"  @click="add">添加商品</el-button>
+              <el-button type="primary" class="btnEdit"  @click="edit">保存</el-button>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -144,8 +149,8 @@ export default {
     return {
       //默认展示的tab项
       activeIndex: 0,
-      // 添加商品表单
-      addForm: {
+      // 商品数据
+      good: {
         goods_name: '',
         goods_price: '',
         goods_weight: '',
@@ -158,8 +163,8 @@ export default {
         // 商品参数、属性
         attrs: []
       },
-      //添加商品表单的验证规则对象
-      addRules: {
+      //修改商品表单的验证规则对象
+      editRules: {
         goods_name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' }
         ],
@@ -190,52 +195,58 @@ export default {
       manyTableData: [],
       // 静态属性列表数据
       onlyTableData: [],
-      //上传图片的url地址
-      // uploadUrl: 'https://www.liulongbin.top:8888/api/private/v1/upload',
-      // getAuthHeaders: {
-      //   Authorization: window.sessionStorage.getItem('token')
-      // },
       fileList: [],
       previewPath: '',
       previewVisible: false
     }
   },
   created() {
-    this.getCateList()
+this.getGood()
   },
   computed: {
     cateId() {
-      if (this.addForm.goods_cat.length === 3) {
-        return this.addForm.goods_cat[2]
+      if (this.good.goods_cat.length === 3) {
+        return this.good.goods_cat[2]
       }
       return null
     },
-    editor() {
-      return this.$refs.myQuillEditor.quill
-    }
   },
   methods: {
-    //获取分类列表
+    //获取商品数据
+    async getGood() {
+      let id = this.$route.params.id - 0
+      console.log(id)
+      const { data: res } = await this.$axios.get('goods/' + id);
+      this.good = res.data;
+      //商品分类字符串转为数组
+      this.good.goods_cat = this.good.goods_cat.split(',')
+      // this.good.goods_cat.map(Number)
+      this.good.goods_cat = JSON.parse('[' + String(this.good.goods_cat) + ']') // [1,2,3]
+      this.getCateList()
+      console.log(this.good.goods_cat)
+    },
+     //获取分类数据
     async getCateList() {
-      const { data: res } = await this.$axios.get('categories')
-      if (res.meta.status != 200) return this.$message.error(res.meta.msg)
+ const { data: res } = await this.$axios.get('categories');
+ if (res.meta.status != 200) return this.$message.error(res.meta.msg)
       this.cateList = res.data
-      // console.log(this.cateList)
+      console.log(this.cateList)
+
     },
     // 级联选择框选择项发生变化触发这个函数
     async handleChanged() {
       // 证明选中的不是三级分类
-      // let goods_cat = this.addForm.goods_cat
-      if (this.addForm.goods_cat.length !== 3) {
-        this.addForm.goods_cat = []
+      // let goods_cat = this.good.goods_cat
+      if (this.good.goods_cat.length !== 3) {
+        this.good.goods_cat = []
         return
       }
       // 证明选中的是三级分类  获取数据
-      console.log(this.addForm.goods_cat)
+      console.log(this.good.goods_cat)
     },
     //切换tab页前的钩子
     beforeTabLeave(activeName, oldActiveName) {
-      // if (oldActiveName === '0' && this.addForm.goods_cat.length !== 3) {
+      // if (oldActiveName === '0' && this.good.goods_cat.length !== 3) {
       //   this.$message.error('请先选择商品分类！')
       //   return false
       // }
@@ -297,8 +308,8 @@ export default {
       // 1. 拼接得到一个图片信息对象
       const picInfo = { pic: response.data.tmp_path }
       // 2. 将图片信息对象，push 到pics数组中
-      this.addForm.pics.push(picInfo)
-      console.log(this.addForm)
+      this.good.pics.push(picInfo)
+      console.log(this.good)
     },
 
     // 处理移除图片的操作
@@ -306,10 +317,10 @@ export default {
       // 1. 获取将要删除的图片的临时路径
       const filePath = file.response.data.tmp_path
       // 2. 从 pics 数组中，找到这个图片对应的索引值
-      const i = this.addForm.pics.findIndex(v => v.pic === filePath)
+      const i = this.good.pics.findIndex(v => v.pic === filePath)
       // 3. 调用数组的 splice 方法，把图片信息对象，从 pics 数组中移除
-      this.addForm.pics.splice(i, 1)
-      console.log(this.addForm)
+      this.good.pics.splice(i, 1)
+      console.log(this.good)
     },
     // 处理图片预览效果
     handlePreview(file) {
@@ -317,40 +328,43 @@ export default {
       this.previewPath = file.response.data.url
       this.previewVisible = true
     },
-    //添加商品
-    async add(){
-      this.$refs.addFormRef.validate(async valid =>{
+    //提交商品编辑
+    async edit(){
+      this.$refs.goodRef.validate(async valid =>{
         if(!valid) {
           return this.$message.error('请填写必要的表单项！')
         }
-        // 执行添加的业务逻辑
+        // 执行修改的业务逻辑
         // 1.goods_cat转为字符串 
-        this.addForm.goods_cat = 
-        this.addForm.goods_cat.join(',')
-        new Number(this.addForm.goods_price)
-        new Number(this.addForm.goods_weight)
-        new Number(this.addForm.goods_number)
+        this.good.goods_cat = 
+        this.good.goods_cat.join(',')
+        new Number(this.good.goods_price)
+        new Number(this.good.goods_weight)
+        new Number(this.good.goods_number)
         // 2.处理动态参数
         this.manyTableData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
             attr_value: item.attr_vals.join(' ')
           }
-          this.addForm.attrs.push(newInfo)
+          this.good.attrs.push(newInfo)
         })
         // 3.处理静态属性
         this.onlyTableData.forEach(item => {
           const newInfo = { attr_id: item.attr_id, attr_value: item.attr_vals }
-          this.addForm.attrs.push(newInfo)
+          this.good.attrs.push(newInfo)
         })
-        console.log(this.addForm)
-        // 发起请求添加商品
-        const { data: res } = await this.$axios.post('goods',this.addForm)
-        console.log(res.data)
-        if (res.meta.status != 201)
-        return this.$message.error('添加商品失败')
+        console.log(this.good)
+        // 发起请求修改商品
+         let id = this.$route.params.id + ''
+        console.log(id)
+
+        const { data: res } = await this.$axios.put('goods/' + id,this.good)
+        console.log(res)
+        if (res.meta.status != 200)
+        return this.$message.error('修改商品失败')
         //提示修改成功
-        this.$message.success('添加商品成功')  
+        this.$message.success('修改商品成功')  
         this.$router.push('/goods')
       
       })
@@ -377,8 +391,10 @@ width: 140px !important;
 height: 140px !important;
 
 }
-.btnAdd {
+.btnEdit {
   margin: 2em;
 }
 
 </style>
+  
+      

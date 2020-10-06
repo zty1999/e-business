@@ -5,7 +5,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 /*导入全局样式表*/
-import '@/assets/style/global.css'
+import '@/assets/style/global.scss'
 // 导入字体图标
 import '@/assets/fonts/iconfont.css'
 Vue.use(ElementUI)
@@ -17,10 +17,6 @@ import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.use(VueQuillEditor, /* { default global options } */)
 
-// 传值  bus总线
-var bus = new Vue()
-Vue.prototype.bus = bus
-
 Vue.mixin({//全局混入
   computed: {
     uploadUrl() {//上传地址
@@ -28,7 +24,7 @@ Vue.mixin({//全局混入
     }
   },
   methods: {
-    getAuthHeaders() {//上传请求头
+    getAuthHeaders() {//上传请求头 
       return {
         Authorization: window.sessionStorage.getItem('token')
       }

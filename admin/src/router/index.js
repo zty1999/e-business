@@ -28,9 +28,11 @@ const routes = [
       //权限列表
       {path: '/rights',name: 'Rights', component: () => import ('@/views/power/Rights')},
       //商品列表
-      {path: '/goods',name: 'GoodsList',component: () => import ('@/views/goods/List')},
-      //添加商品
-      {path: '/goods/add',name: 'Add', component: () => import ('@/views/goods/Add')},
+      {path: '/goods',name: 'Goods', component: () => import ('@/views/goods/Goods')},
+      //商品添加列表
+      {path: '/good/add',name: 'Add', component: () => import ('@/views/goods/Add')},
+      //商品编辑列表
+      {path: '/good/edit/:id',name: 'Edit', component: () => import ('@/views/goods/Edit')},
       // 分类参数
       {path: '/params',name: 'Params', component: () => import ('@/views/goods/Params')},
       // 商品分类
