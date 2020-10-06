@@ -58,18 +58,16 @@
                 onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
               ></el-input>
             </el-form-item>
-            <el-form-item label="商品分类" prop="goods_cat">
-              </el-form-item>
+            <el-form-item label="商品分类" prop="goods_cat"> </el-form-item>
             <!-- 选择商品分类的级联选择框 -->
             <el-cascader
-                :props="cateProps"
-                expand-trigger="hover"
-                v-model="good.goods_cat"
-                :options="cateList"
-                @change="handleChanged()"
-                clearable
-              ></el-cascader
-            >
+              :props="cateProps"
+              expand-trigger="hover"
+              v-model="good.goods_cat"
+              :options="cateList"
+              @change="handleChanged()"
+              clearable
+            ></el-cascader>
           </el-tab-pane>
           <el-tab-pane label="商品参数" name="1">
             <!-- 渲染表单的Item项 -->
@@ -101,10 +99,30 @@
           </el-tab-pane>
           <el-tab-pane label="商品图片" name="3" style="display: flex">
             <!-- action 表示图片要上传到的后台API地址 drag 拖拽上传 accept限制上传文件类型 *表示支持所有的格式-->
-            <div style="display: flex; ">
-            <div class="" v-for="(item,index) in good.pics" :key="index" v-if="item.pics_big_url" style="padding-right: 5px; ">
-            <el-image style="width: 148px; height: 148px; border: 1px solid #c0ccda;border-radius: 6px;"  :src="item.pics_big_url" >
-              </el-image></div></div>
+            <div style="display: flex">
+              <div
+                class="uploaded-img-wrapper"
+                v-for="(item, index) in good.pics"
+                :key="index"
+                style="padding-right: 10px"
+              >
+                <el-image
+                  class="uploaded-img"
+                  style="
+                    width: 148px;
+                    height: 148px;
+                    border: 1px solid #c0ccda;
+                    border-radius: 6px;
+                  "
+                  :src="item"
+                  :preview-src-list="good.pics"
+                >
+                </el-image>
+                <div class="delete-img" @click="deleteImg()">
+                  <i class="el-icon-delete"></i>
+                </div>
+              </div>
+            </div>
             <el-upload
               :action="uploadUrl"
               :headers="getAuthHeaders()"
@@ -112,10 +130,11 @@
               :on-remove="handleRemove"
               :on-success="handleSuccess"
               :before-upload="beforeUpload"
-              accept="image/*" drag
+              accept="image/*"
+              drag
               list-type="picture-card"
             >
-                <i class="el-icon-plus"></i>
+              <i class="el-icon-plus"></i>
             </el-upload>
             <!-- 图片预览 -->
             <el-dialog
@@ -127,14 +146,12 @@
             </el-dialog>
           </el-tab-pane>
           <el-tab-pane label="商品内容" name="4">
-            <quill-editor
-    ref="myQuillEditor"
-    v-model="good.goods_introduce"
-    
-  />
+            <quill-editor ref="myQuillEditor" v-model="good.goods_introduce" />
             <!-- 保存商品修改的按钮 -->
-            <div style="text-align:right">
-              <el-button type="primary" class="btnEdit"  @click="edit">保存</el-button>
+            <div style="text-align: right">
+              <el-button type="primary" class="btnEdit" @click="edit"
+                >保存</el-button
+              >
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -161,25 +178,25 @@ export default {
         //商品介绍
         goods_introduce: '',
         // 商品参数、属性
-        attrs: []
+        attrs: [],
       },
       //修改商品表单的验证规则对象
       editRules: {
         goods_name: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' }
+          { required: true, message: '请输入商品名称', trigger: 'blur' },
         ],
         goods_price: [
-          { required: true, message: '请输入商品价格', trigger: 'blur' }
+          { required: true, message: '请输入商品价格', trigger: 'blur' },
         ],
         goods_weight: [
-          { required: true, message: '请输入商品重量', trigger: 'blur' }
+          { required: true, message: '请输入商品重量', trigger: 'blur' },
         ],
         goods_number: [
-          { required: true, message: '请输入商品数量', trigger: 'blur' }
+          { required: true, message: '请输入商品数量', trigger: 'blur' },
         ],
         goods_cat: [
-          { required: true, message: '请选择商品分类', trigger: 'blur' }
-        ]
+          { required: true, message: '请选择商品分类', trigger: 'blur' },
+        ],
       },
       //商品分类数据
       cateList: [],
@@ -189,7 +206,7 @@ export default {
       cateProps: {
         value: 'cat_id',
         label: 'cat_name',
-        children: 'children'
+        children: 'children',
       },
       // 动态参数列表数据
       manyTableData: [],
@@ -197,11 +214,11 @@ export default {
       onlyTableData: [],
       fileList: [],
       previewPath: '',
-      previewVisible: false
+      previewVisible: false,
     }
   },
   created() {
-this.getGood()
+    this.getGood()
   },
   computed: {
     cateId() {
@@ -216,22 +233,23 @@ this.getGood()
     async getGood() {
       let id = this.$route.params.id - 0
       console.log(id)
-      const { data: res } = await this.$axios.get('goods/' + id);
-      this.good = res.data;
+      const { data: res } = await this.$axios.get('goods/' + id)
+      this.good = res.data
       //商品分类字符串转为数组
       this.good.goods_cat = this.good.goods_cat.split(',')
       // this.good.goods_cat.map(Number)
       this.good.goods_cat = JSON.parse('[' + String(this.good.goods_cat) + ']') // [1,2,3]
       this.getCateList()
+      //图片预览需要传入数组 将商品图片地址拼接为数组
+      this.good.pics = this.good.pics.map((i) => i.pics_big_url)
       console.log(this.good.goods_cat)
     },
-     //获取分类数据
+    //获取分类数据
     async getCateList() {
- const { data: res } = await this.$axios.get('categories');
- if (res.meta.status != 200) return this.$message.error(res.meta.msg)
+      const { data: res } = await this.$axios.get('categories')
+      if (res.meta.status != 200) return this.$message.error(res.meta.msg)
       this.cateList = res.data
       console.log(this.cateList)
-
     },
     // 级联选择框选择项发生变化触发这个函数
     async handleChanged() {
@@ -258,7 +276,7 @@ this.getGood()
         const { data: res } = await this.$axios.get(
           `categories/${this.cateId}/attributes`,
           {
-            params: { sel: 'many' }
+            params: { sel: 'many' },
           }
         )
 
@@ -266,7 +284,7 @@ this.getGood()
           return this.$message.error('获取动态参数列表失败！')
         }
         console.log(res.data)
-        res.data.forEach(item => {
+        res.data.forEach((item) => {
           item.attr_vals =
             item.attr_vals.length === 0 ? [] : item.attr_vals.split(' ')
         })
@@ -275,7 +293,7 @@ this.getGood()
         const { data: res } = await this.$axios.get(
           `categories/${this.cateId}/attributes`,
           {
-            params: { sel: 'only' }
+            params: { sel: 'only' },
           }
         )
         if (res.meta.status !== 200) {
@@ -304,20 +322,23 @@ this.getGood()
     },
     // 监听图片上传成功的事件
     handleSuccess(response) {
-      console.log(response)
+      // console.log(response)
       // 1. 拼接得到一个图片信息对象
       const picInfo = { pic: response.data.tmp_path }
-      // 2. 将图片信息对象，push 到pics数组中
-      this.good.pics.push(picInfo)
-      console.log(this.good)
-    },
 
+      // console.log(this.good)
+    },
+    //之前已经上传的图片 删除操作
+    async deleteImg() {
+      // const { data: res } = await this.$axios.delete('')
+      
+    },
     // 处理移除图片的操作
     handleRemove(file) {
       // 1. 获取将要删除的图片的临时路径
       const filePath = file.response.data.tmp_path
       // 2. 从 pics 数组中，找到这个图片对应的索引值
-      const i = this.good.pics.findIndex(v => v.pic === filePath)
+      const i = this.good.pics.findIndex((v) => v.pic === filePath)
       // 3. 调用数组的 splice 方法，把图片信息对象，从 pics 数组中移除
       this.good.pics.splice(i, 1)
       console.log(this.good)
@@ -329,49 +350,46 @@ this.getGood()
       this.previewVisible = true
     },
     //提交商品编辑
-    async edit(){
-      this.$refs.goodRef.validate(async valid =>{
-        if(!valid) {
+    async edit() {
+      this.$refs.goodRef.validate(async (valid) => {
+        if (!valid) {
           return this.$message.error('请填写必要的表单项！')
         }
         // 执行修改的业务逻辑
-        // 1.goods_cat转为字符串 
-        this.good.goods_cat = 
-        this.good.goods_cat.join(',')
+        // 1.goods_cat转为字符串
+        this.good.goods_cat = this.good.goods_cat.join(',')
         new Number(this.good.goods_price)
         new Number(this.good.goods_weight)
         new Number(this.good.goods_number)
         // 2.处理动态参数
-        this.manyTableData.forEach(item => {
+        this.manyTableData.forEach((item) => {
           const newInfo = {
             attr_id: item.attr_id,
-            attr_value: item.attr_vals.join(' ')
+            attr_value: item.attr_vals.join(' '),
           }
           this.good.attrs.push(newInfo)
         })
         // 3.处理静态属性
-        this.onlyTableData.forEach(item => {
+        this.onlyTableData.forEach((item) => {
           const newInfo = { attr_id: item.attr_id, attr_value: item.attr_vals }
           this.good.attrs.push(newInfo)
         })
         console.log(this.good)
+        // 4. 将图片信息对象，push 到pics数组中
+        this.good.pics.push(picInfo)
         // 发起请求修改商品
-         let id = this.$route.params.id + ''
+        let id = this.$route.params.id + ''
         console.log(id)
 
-        const { data: res } = await this.$axios.put('goods/' + id,this.good)
+        const { data: res } = await this.$axios.put('goods/' + id, this.good)
         console.log(res)
-        if (res.meta.status != 200)
-        return this.$message.error('修改商品失败')
+        if (res.meta.status != 200) return this.$message.error('修改商品失败')
         //提示修改成功
-        this.$message.success('修改商品成功')  
+        this.$message.success('修改商品成功')
         this.$router.push('/goods')
-      
       })
-
-        
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -385,16 +403,42 @@ this.getGood()
 .previewImg {
   width: 100%;
 }
-.el-upload-dragger {
-border: none;
-width: 140px !important;
-height: 140px !important;
+.uploaded-img-wrapper {
+  position: relative;
 
+  .delete-img {
+    display: none;
+  }
+  &:hover {
+    .delete-img {
+      display: block;
+      position: absolute;
+      width: 148px;
+      height: 30px;
+      line-height: 30px;
+      left: 0px;
+      top: 118px;
+      background: rgba(59, 60, 61, 0.5);
+      // box-sizing: content-box;
+      z-index: 999;
+      cursor: pointer;
+      text-align: right;
+      i {
+        margin: 4px 10px 0 0;
+        display: block;
+        font-size: 20px;
+        color: white;
+      }
+    }
+  }
+}
+
+.el-upload-dragger {
+  border: none;
+  width: 140px !important;
+  height: 140px !important;
 }
 .btnEdit {
   margin: 2em;
 }
-
 </style>
-  
-      
