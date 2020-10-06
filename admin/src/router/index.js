@@ -40,7 +40,7 @@ const routes = [
       // 订单列表
       {path: '/orders',name: 'Orders', component: () => import ('@/views/order/Orders')},
       // 数据报表
-      {path: '/reports',name: 'Reports', component: () => import ('@/views/Reports')},
+      {path: '/reports',name: 'Reports', component: () => import ('@/views/report/Reports')},
     
     ]
   }

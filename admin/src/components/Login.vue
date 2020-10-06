@@ -3,7 +3,7 @@
     <div class="login-box">
       <!-- 头像区域 -->
       <el-avatar class="avatar-box">
-        <img src="@/assets/image/avatar.png" alt />
+        <img src="@/assets/image/logo.png" alt />
       </el-avatar>
       <!-- 登录表单区域 -->
       <el-form
@@ -87,8 +87,9 @@ export default {
 <style lang="scss" scoped>
 .login-container {
   height: 100%;
-  background: url('../assets/image/bg.png') no-repeat 0 0;
-  background-size: 100% 100%;
+  // background: url('../assets/image/bg.png') no-repeat 0 0;
+  // background-size: 100% 100%;
+  background-color: #2B4B6B;
   .login-box {
     width: 450px;
     height: 300px;
@@ -105,6 +106,8 @@ export default {
       left: 50%;
       // top: 50%;
       transform: translate(-50%, -50%);
+      border: 10px solid #fff;
+      background-color: #EEEEEE;
       img {
         width: 100%;
         height: 100%;
