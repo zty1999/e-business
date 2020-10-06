@@ -91,7 +91,7 @@ export default {
       //商品列表数据
       GoodsList: [],
       //当前页
-      // currentPage: 1,
+      currentPage: 1,
       //商品总数
       total: 0,
       //分类数据
@@ -208,18 +208,6 @@ export default {
       this.getGoodsList()
       console.log(`当前页: ${newPage}`)
     },
-    // 监听 switch 开关状态的改变
-    async GoodsStateChanged(Goodsinfo) {
-      console.log(Goodsinfo)
-      const { data: res } = await this.$axios.put(
-        `Goodss/${Goodsinfo.id}/state/${Goodsinfo.mg_state} `
-      )
-      if (res.meta.status != 200) {
-        Goodsinfo.mg_state = !Goodsinfo.mg_state //重置页面状态 避免页面与后台状态冲突
-        return this.$message.error('更新商品状态失败！')
-      }
-      this.$message.success('更新商品状态成功！')
-    },
     //搜索功能
     Search() {
       this.queryInfo.pagenum = 1
@@ -276,48 +264,6 @@ export default {
         this.onlyTableData = res.data
       }
     },
-  // //跳转到商品编辑页面
-  // toEditPage(id) {
-  //   this.$router.push('/good/edit/' + id)
-  // },
-
-    // 监听修改商品对话框的关闭事件  重置对话框表单
-    // editDialogClose(editForm) {
-    //   this.$refs.editFormRef.resetFields()
-    // },
-
-    //展示编辑商品的对话框 获取该商品数据
-    // async getGoods(id) {
-    //   const { data: res } = await this.$axios.get(`goods/${id}`)
-    //   if (res.meta.status !== 200) {
-    //     return this.$message.error('查询商品信息失败！')
-    //   }
-    //   this.editForm = res.data
-    //   this.editDialogVisible = true
-    // },
-    // // 修改商品信息并提交
-    // editGoods() {
-    //   this.$refs.editFormRef.validate(async (valid) => {
-    //     if (!valid) return
-    //     // 发起修改商品信息的数据请求
-    //     const { data: res } = await this.$axios.put(
-    //       `Goodss/${this.editForm.id}`,
-    //       {
-    //         email: this.editForm.email,
-    //         mobile: this.editForm.mobile,
-    //       }
-    //     )
-    //     console.log(res.data)
-    //     if (res.meta.status != 200)
-    //       return this.$message.error('更新商品信息失败')
-    //     //刷新数据列表
-    //     this.getGoodsList()
-    //     // 关闭修改商品信息的对话框
-    //     this.editDialogVisible = false
-    //     //提示修改成功
-    //     this.$message.success('更新商品信息成功')
-    //   })
-    // },
     // 删除商品并提交
     async removeGoodsById(id) {
       console.log(id)

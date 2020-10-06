@@ -38,7 +38,7 @@ const routes = [
       // 商品分类
       {path: '/categories',name: 'Categories', component: () => import ('@/views/goods/Categories')},
       // 订单列表
-      {path: '/orders',name: 'Orders', component: () => import ('@/views/Orders')},
+      {path: '/orders',name: 'Orders', component: () => import ('@/views/order/Orders')},
       // 数据报表
       {path: '/reports',name: 'Reports', component: () => import ('@/views/Reports')},
     
