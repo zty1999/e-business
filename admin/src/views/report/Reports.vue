@@ -88,7 +88,7 @@ export default {
     const result = _.merge(res.data, this.options)
     // 5.使用指定的配置项和数据显示图表
     myChart.setOption(result)
-  },
+  },  
   methods: {
 
   }
