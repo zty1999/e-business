@@ -36,7 +36,7 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item-group>
+            <!-- <el-menu-item-group> -->
               <el-menu-item @click="saveNavState('/' + subItem.path)"
                 :index="'/' + subItem.path"
                 v-for="subItem in item.children"
@@ -45,7 +45,7 @@
                 <i class="el-icon-menu"></i>
                 <span>{{subItem.authName}}</span>
               </el-menu-item>
-            </el-menu-item-group>
+            <!-- </el-menu-item-group> -->
           </el-submenu>
         </el-menu>
       </el-aside>
