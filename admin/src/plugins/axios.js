@@ -2,7 +2,9 @@
 
 import Vue from 'vue';
 import axios from "axios";
-
+//页面加载进度条
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -19,6 +21,8 @@ const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
   function(config) {
+    // 在request 拦截器中, 展示进度条 NProgress.start()
+    NProgress.start()
     //通过axios请求拦截器添加token,拥有获取API数据的权限。
     config.headers.Authorization = window.sessionStorage.getItem('token');
     console.log('config');
@@ -33,6 +37,8 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   function(response) {
+    // 通过axios响应拦截器隐藏进度条NProgress.done()
+    NProgress.done()
     // Do something with response data
     return response;
   },
